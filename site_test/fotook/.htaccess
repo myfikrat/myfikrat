@@ -1,0 +1,41 @@
+# fotook.net — SAFE .htaccess (NO redirect — HTTPS is forced by Hostinger hPanel)
+# Contains zero RewriteRule, so it cannot cause the redirect loop / ERR_CONNECTION_RESET.
+# Keep "Force HTTPS" ON in hPanel → Security → SSL. This file only adds
+# compression, caching and security headers.
+
+# ── Correct MIME types ──
+<IfModule mod_mime.c>
+  AddType application/javascript .js .mjs
+  AddType text/css .css
+</IfModule>
+
+# ── Compression (gzip) ──
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# ── Caching ──
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ── Security headers ──
+<IfModule mod_headers.c>
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), payment=(self), camera=(self)"
+  <FilesMatch "fotook-pdf(\.worker)?\.js$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ── Block direct access to sensitive files ──
+<FilesMatch "\.(log|htaccess)$">
+  Require all denied
+</FilesMatch>
