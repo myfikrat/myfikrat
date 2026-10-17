@@ -36,6 +36,6 @@
 </IfModule>
 
 # ── Block direct access to sensitive files ──
-<FilesMatch "\.(log|htaccess)$">
+<FilesMatch "\.(log|htaccess)$|^secrets\.(local|example)\.php$">
   Require all denied
 </FilesMatch>

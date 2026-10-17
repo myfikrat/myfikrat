@@ -378,7 +378,7 @@ const PROXY_URL = "/proxy.php";
 const PAY_URL = "/pay.php";
 // Paste your PayPal *live* (or sandbox) Client ID here to enable paid AI checks.
 const PAYPAL_CLIENT_ID = "YOUR_PAYPAL_CLIENT_ID";
-const AI_PRICE = "2";            // USD, must match $PRICE_USD in pay.php
+const AI_PRICE = "3";            // USD, must match $PRICE_USD in pay.php
 const AI_ENABLED = PAYPAL_CLIENT_ID && PAYPAL_CLIENT_ID !== "YOUR_PAYPAL_CLIENT_ID" || typeof window !== "undefined" && window.__FOTOOK_PP_TEST === true;
 
 /* ─── Dropbox / Google Drive — pick files straight from the cloud ─── */
@@ -593,7 +593,7 @@ function loadPayPal() {
     if (window.paypal) return resolve(window.paypal);
     if (!AI_ENABLED) return reject(new Error("PayPal not configured"));
     const s = document.createElement("script");
-    s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID)}&currency=USD&intent=capture&components=buttons,funding-eligibility&enable-funding=venmo,paylater`;
+    s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID)}&currency=USD&intent=capture&components=buttons,funding-eligibility,applepay,googlepay&enable-funding=venmo,paylater`;
     s.onload = () => resolve(window.paypal);
     s.onerror = () => reject(new Error("Failed to load PayPal SDK"));
     document.head.appendChild(s);
